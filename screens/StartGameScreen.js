@@ -26,7 +26,7 @@ function StartGameScreen({setNumber}) {
             Alert.alert('Alert','Number is not valid!',[{text:'Ok',style:'default',onPress:alertPressed}])
             return;
         }
-        setNumber(intValue);
+        setNumber(intValue) ;
     }
 
 
