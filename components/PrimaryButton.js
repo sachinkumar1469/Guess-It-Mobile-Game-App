@@ -3,9 +3,9 @@ import { Pressable,View,Text,StyleSheet } from 'react-native'
 
 
 
-function PrimaryButton({children,onPress}) {
+function PrimaryButton({children,onPress,customStyle}) {
   return (
-    <View style={style.container}>
+    <View style={{...style.container,...customStyle}}>
         <Pressable onPress={onPress} android_ripple={style.android_ripple} style={style.press}>
             <Text style={style.btnText}>{children}</Text>
         </Pressable>
@@ -22,7 +22,7 @@ const style = StyleSheet.create({
         borderRadius:10,
         elevation:20,
         marginVertical:5,
-        overflow:'hidden'
+        overflow:'hidden',
     },
     btnText:{
         color:'white',
