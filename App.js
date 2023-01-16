@@ -13,9 +13,9 @@ export default function App() {
 
   return (
     <LinearGradient colors={['#cf23cf','#ab00ab','#790079']} style={styles.container}>
-      <ImageBackground source={require('./assets/background.png')} style={styles.img} resizeMode='cover' imageStyle={{opacity:0.5}}>
+      <ImageBackground source={require('./assets/background.png')} style={styles.img} resizeMode='cover' imageStyle={{opacity:0.3}}>
         <SafeAreaView style={styles.container}>
-          {!number ? <StartGameScreen setNumber={setNumber}/> : <GameScreen/>}
+          {!number ? <StartGameScreen setNumber={setNumber}/> : <GameScreen selectedValue={number}/>}
         </SafeAreaView>
       </ImageBackground>
       <StatusBar style='inverted'/>
