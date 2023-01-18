@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
-import { View,Text,StyleSheet } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View,Text,StyleSheet, Alert } from 'react-native'
 import PrimaryButton from '../components/PrimaryButton';
 import Title from '../components/Title';
+import {Ionicons} from '@expo/vector-icons'
 
 function genrateRandomNum(min,max,exclude){
   let random = Math.floor(Math.random() * (max-min)) + min;
@@ -16,7 +17,7 @@ function genrateRandomNum(min,max,exclude){
 let min = 1;
   let max = 100;
 
-function GameScreen({selectedValue}) {
+function GameScreen({selectedValue,setGameOver}) {
 
   const [currGuess,setCurrGuess] = useState(genrateRandomNum(1,99,selectedValue));
 
@@ -24,31 +25,47 @@ function GameScreen({selectedValue}) {
 
   function onNew(direction){
 
+    if(
+      (direction=="lower" && currGuess<selectedValue) ||
+      (direction=="higher" && currGuess>selectedValue)
+    ){
+      Alert.alert("Wrong Guess","Don't Lie :)",[{text:"Cancel", style:"cancel"}]);
+      return;
+    }
+
     if(direction === 'lower'){
       max = currGuess;
+      setCurrGuess(genrateRandomNum(min,max,currGuess));
     }
 
     if(direction === 'higher'){
-      min = currGuess;
+      min = currGuess+1;
+      setCurrGuess(genrateRandomNum(min,max,currGuess));
     }
-
-
   }
-
+  
+  useEffect(()=>{
+    if(currGuess == selectedValue){
+      setGameOver(true);
+    }
+  },[currGuess])
 
   return (
     <View style={style.container}>
+      <View style={style.wrapper}>        
         <Title>Opponent's Guess</Title>
         <View style={style.innerCont}>
           <Text style={style.currGuess}>{currGuess}</Text>
           <View style={style.controller}>
             <Text style={style.cmt}>Higher Or Lower?</Text>
             <View style={style.btnCont}>
-              <PrimaryButton onPress={onPlus} customStyle={{width:50,marginRight:15}}>+</PrimaryButton>
-              <PrimaryButton onPress={onMinus} customStyle={{width:50}}>-</PrimaryButton>
+              <PrimaryButton onPress={onNew.bind(this,"lower")} customStyle={{width:50,marginRight:15}}>-</PrimaryButton>
+              <PrimaryButton onPress={onNew.bind(this,"higher")} customStyle={{width:50}}>+</PrimaryButton>
             </View>
           </View>
         </View>
+        </View>
+
     </View>
   )
 }
@@ -60,6 +77,12 @@ const style = StyleSheet.create({
         flex:1,
         justifyContent:'center',
         padding:12,  
+    },
+    wrapper:{
+      backgroundColor:"white",
+      padding:8,
+      borderRadius:5,
+      paddingVertical:15,
     },
     innerCont:{
       alignItems:'center',
@@ -92,7 +115,6 @@ const style = StyleSheet.create({
     cmt:{
       margin:15,
       fontSize:20,
-      color:"white",
       opacity:0.8
     }
 })
